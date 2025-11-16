@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda a Economizar Sem Abrir Mão da Sua Diversão</title>
+    <!-- Carrega o Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carrega ícones Lucide (usados como placeholders e para estilo) -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Configuração de fonte global */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        :root {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Cor de destaque principal (o "laranja/vermelho" da referência) */
+        .accent { color: #f97316; /* Tailwind Orange 600 */ }
+        .bg-accent { background-color: #f97316; }
+        .hover\:bg-accent:hover { background-color: #ea580c; /* Orange 700 */ }
+
+        /* Estilo para a seção de vídeo simulada */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(249, 115, 22, 0.2), 0 8px 10px -6px rgba(249, 115, 22, 0.1);
+        }
+        .video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .video-placeholder:hover {
+            opacity: 0.95;
+        }
+
+        /* Estilo para a caixa de mensagem (modal) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+         /* Cor de destaque principal (o "laranja/vermelho" da referência) */
+        .accent { color: #f97316; /* Tailwind Orange 600 */ }
+        .bg-accent { background-color: #f97316; }
+        .hover\:bg-accent:hover { background-color: #ea580c; /* Orange 700 */ }
+
+        /* Estilo para a seção de vídeo simulada */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio para iframe/video */
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(249, 115, 22, 0.2), 0 8px 10px -6px rgba(249, 115, 22, 0.1);
+        }
+        /* Garantir que o iframe preencha o container */
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Estilo para a caixa de mensagem (modal) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white antialiased">
+
+    <!-- Mensagem de Garantia (Modal Customizado) -->
+    <div id="guarantee-modal" class="modal-overlay" onclick="closeModal()">
+        <div class="bg-gray-800 p-8 rounded-xl max-w-sm mx-4 w-full shadow-2xl border border-gray-700" onclick="event.stopPropagation()">
+            <div class="text-center">
+                <i data-lucide="shield-check" class="accent w-12 h-12 mx-auto mb-4"></i>
+                <h3 class="text-2xl font-bold mb-2">Garantia Incondicional</h3>
+                <p class="text-gray-300 leading-relaxed">
+                    Você tem 7 dias completos para explorar o conteúdo. Se por qualquer motivo não gostar, basta nos enviar um e-mail e você será reembolsado 100% do valor. Simples assim, sem burocracia.
+                </p>
+                <button onclick="closeModal()" class="mt-6 w-full py-3 bg-accent rounded-lg font-semibold hover:bg-red-700 transition duration-300">
+                    Entendi!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1. Header Fixo Simples (Inspirado na referência) -->
+    <header class="bg-black/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-4">
+            <!-- Logo (Simulado - 'M' da Máquina Milionária) -->
+            <div class="text-2xl font-extrabold flex items-center">
+                <span class="accent mr-1">E</span><span class="text-white">cono Fácil</span>
+            </div>
+            <!-- Menu Desktop -->
+            <nav class="hidden md:flex space-x-6 text-gray-400 font-medium">
+                <a href="#solucao" class="hover:text-accent transition duration-200">Solução</a>
+                <a href="#bonus" class="hover:text-accent transition duration-200">Bônus</a>
+                <a onclick="openModal()" class="cursor-pointer hover:text-accent transition duration-200">Garantia</a>
+            </nav>
+            <!-- CTA Mobile/Secundário -->
+            <a href="#cta-final" class="md:hidden py-2 px-4 bg-accent text-white rounded-lg font-bold text-sm shadow-md hover:bg-red-700 transition duration-300">
+                EU QUERO
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- 🔢 CALCULADORA DE ECONOMIA -->
+<section class="bg-black py-12 px-4 border-b border-gray-800">
+    <div class="max-w-3xl mx-auto text-center">
+
+        <h2 class="text-3xl font-extrabold mb-4">
+            Calcule Sua Economia em 12 Meses 💰
+        </h2>
+
+        <p class="text-gray-300 mb-8 text-lg">
+            Veja quanto você consegue juntar guardando apenas <span class="accent font-bold">10% do seu salário</span> todo mês.
+        </p>
+
+        <!-- Campo de entrada -->
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-xl">
+            <label class="block text-left text-gray-300 font-semibold mb-2">
+                Seu salário mensal (R$):
+            </label>
+            <input 
+                id="salarioInput" 
+                type="number" 
+                placeholder="Ex: 1500"
+                class="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 text-white text-lg focus:outline-none focus:ring-2 focus:ring-accent"
+            >
+
+            <button 
+                onclick="calcularEconomia()"
+                class="mt-6 w-full py-3 bg-accent rounded-lg text-white font-bold text-lg hover:bg-red-700 transition duration-300"
+            >
+                Calcular Economia
+            </button>
+
+            <!-- Resultado -->
+            <div id="resultadoEconomia" class="text-xl font-bold text-accent mt-6 hidden">
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- 2. Seção Hero (Título e Vídeo Simulado) -->
+        <section class="bg-gray-950 pt-16 pb-20 md:pt-24 md:pb-32 px-4">
+            <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+                
+                <!-- Coluna de Texto Principal -->
+                <div class="text-center md:text-left">
+                    <span class="text-xs md:text-sm font-semibold uppercase tracking-widest text-gray-400 mb-3 block">Guia de Economia Pessoal</span>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-4">
+                        <span class="accent">Aprenda a Economizar</span> Sem deixar de tomar uma — Mesmo Ganhando Pouco
+                    </h1>
+                    <p class="text-xl text-gray-300 mb-8 max-w-lg mx-auto md:mx-0">
+                        Um guia leve e prático para fazer sobrar dinheiro todo mês sem parar de tomar sua gelada de fim de semana.
+                    </p>
+                    
+                    <!-- CTA Primário (Abaixo do Título no Mobile) -->
+                    <a href="#cta-final" class="inline-block py-4 px-8 bg-accent text-white rounded-xl font-bold text-lg shadow-xl hover:bg-red-700 transition duration-300 transform hover:scale-105">
+                        👉 Quero a Liberdade Financeira
+                    </a>
+                </div>
+
+                <!-- Coluna de Vídeo Simulado (Inspirado na referência) -->
+                <div class="mt-8 md:mt-0">
+                    <div class="video-container">
+                        <!-- 
+                            COMO INSERIR SEU VÍDEO:
+                            1. Se for YouTube: Obtenha o código de incorporação (embed) do vídeo (ex: https://www.youtube.com/embed/YOUR_VIDEO_ID)
+                            2. Substitua o 'src' do iframe abaixo pela sua URL de incorporação.
+                            
+                            Exemplo de YouTube: 
+                            src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1"
+                        -->
+                        <iframe 
+                            src="TESTE CARTELAS - 01 agosto 2025 - 11-18-35 .mp4"
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        
+        <!-- 3. Que Problema Ele Resolve (Fundo de Contraste) -->
+        <section id="problema" class="bg-black py-20 px-4 border-t border-gray-800">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">Você Está Cansado Disso?</h2>
+                <p class="text-xl text-gray-400 mb-10">Você trabalha duro o mês inteiro... Mas o dinheiro some antes do fim do mês, não importa o quanto você tente controlar.</p>
+                
+                <p class="text-lg text-gray-300 mb-8">E pra piorar, quando alguém fala de “economizar”, parece que você precisa:</p>
+                
+                <div class="flex flex-wrap justify-center gap-6">
+                    <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-red-600/50 flex flex-col items-center max-w-xs transition duration-300 hover:scale-[1.02]">
+                        <i data-lucide="x-circle" class="text-red-600 w-8 h-8 mb-3"></i>
+                        <span class="text-xl font-semibold">PARAR DE SAIR</span>
+                    </div>
+                    <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-red-600/50 flex flex-col items-center max-w-xs transition duration-300 hover:scale-[1.02]">
+                        <i data-lucide="x-circle" class="text-red-600 w-8 h-8 mb-3"></i>
+                        <span class="text-xl font-semibold">PARAR DE BEBER</span>
+                    </div>
+                    <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-red-600/50 flex flex-col items-center max-w-xs transition duration-300 hover:scale-[1.02]">
+                        <i data-lucide="x-circle" class="text-red-600 w-8 h-8 mb-3"></i>
+                        <span class="text-xl font-semibold">PARAR DE VIVER</span>
+                    </div>
+                </div>
+                <p class="text-2xl font-bold mt-12 accent">Mas isso não é verdade!</p>
+            </div>
+        </section>
+
+        <!-- 4. Apresentação da Solução (Alternando Cor) -->
+        <section id="solucao" class="bg-gray-900 py-20 px-4">
+            <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+                
+                <!-- Coluna de Texto (Solução) -->
+                <div class="order-2 md:order-1">
+                    <h2 class="text-3xl sm:text-4xl font-extrabold mb-6">A Solução Real, Sem Sofrimento.</h2>
+                    <p class="text-lg text-gray-300 mb-6">O ebook <span class="accent font-bold">“Aprenda a Economizar Sem Deixar de Tomar uma no Fim de Semana!”</span> mostra exatamente como você pode:</p>
+                    
+                    <ul class="space-y-4 text-left text-xl">
+                        <li class="flex items-start">
+                            <i data-lucide="check-circle" class="accent w-6 h-6 mr-3 mt-1 flex-shrink-0"></i>
+                            <span>economizar sem sofrimento</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check-circle" class="accent w-6 h-6 mr-3 mt-1 flex-shrink-0"></i>
+                            <span>organizar suas contas sem complicação</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check-circle" class="accent w-6 h-6 mr-3 mt-1 flex-shrink-0"></i>
+                            <span>guardar um pouquinho todo mês</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check-circle" class="accent w-6 h-6 mr-3 mt-1 flex-shrink-0"></i>
+                            <span>e ainda curtir o que você gosta</span>
+                        </li>
+                    </ul>
+
+                    <p class="text-md italic text-gray-400 mt-6">Tudo com linguagem leve, direta e pensada para quem ganha até 2 salários mínimos.</p>
+                </div>
+                
+                <!-- Coluna de Imagem (Simulação Ebook) -->
+                <div class="order-1 md:order-2 flex justify-center">
+                    <div class="p-8 bg-gray-800 rounded-2xl shadow-2xl border border-gray-700 w-full max-w-sm text-center transform rotate-3 hover:rotate-0 transition duration-500">
+                        <i data-lucide="book-open-check" class="accent w-16 h-16 mx-auto mb-4"></i>
+                        <h3 class="text-2xl font-bold text-white mb-2">O Guia da Economia Leve</h3>
+                        <p class="text-gray-400">Transforme suas finanças em 30 dias.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        
+        <!-- 5. O Que Você Vai Aprender -->
+        <section class="bg-black py-20 px-4 border-t border-gray-800">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-4xl font-extrabold text-center mb-12">📘 O Que Você Vai Aprender</h2>
+                
+                <div class="grid md:grid-cols-3 gap-8 text-lg">
+                    <!-- Coluna 1 -->
+                    <div class="bg-gray-900 p-8 rounded-xl border-l-4 border-accent shadow-xl">
+                        <h3 class="text-2xl font-bold mb-4">Organização Simples</h3>
+                        <ul class="space-y-3 text-gray-300">
+                            <li class="flex items-start"><i data-lucide="arrow-right-circle" class="accent w-5 h-5 mr-3 mt-1 flex-shrink-0"></i> Como descobrir para onde seu dinheiro está indo</li>
+                            <li class="flex items-start"><i data-lucide="arrow-right-circle" class="accent w-5 h-5 mr-3 mt-1 flex-shrink-0"></i> Como organizar suas contas de forma simples</li>
+                            <li class="flex items-start"><i data-lucide="arrow-right-circle" class="accent w-5 h-5 mr-3 mt-1 flex-shrink-0"></i> Como aplicar a regra dos 10% sem sentir falta</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Coluna 2 -->
+                    <div class="bg-gray-900 p-8 rounded-xl border-l-4 border-accent shadow-xl">
+                        <h3 class="text-2xl font-bold mb-4">Lazer Garantido</h3>
+                        <ul class="space-y-3 text-gray-300">
+                            <li class="flex items-start"><i data-lucide="arrow-right-circle" class="accent w-5 h-5 mr-3 mt-1 flex-shrink-0"></i> Como cortar excessos sem cortar a sua diversão</li>
+                            <li class="flex items-start"><i data-lucide="arrow-right-circle" class="accent w-5 h-5 mr-3 mt-1 flex-shrink-0"></i> Como manter o hábito de economizar para sempre</li>
+                            <li class="flex items-start"><i data-lucide="arrow-right-circle" class="accent w-5 h-5 mr-3 mt-1 flex-shrink-0"></i> Como montar sua reserva de emergência</li>
+                        </ul>
+                    </div>
+
+                    <!-- Coluna 3 -->
+                    <div class="bg-gray-900 p-8 rounded-xl border-l-4 border-accent shadow-xl">
+                        <h3 class="text-2xl font-bold mb-4">Plano Prático</h3>
+                        <ul class="space-y-3 text-gray-300">
+                            <li class="flex items-start"><i data-lucide="arrow-right-circle" class="accent w-5 h-5 mr-3 mt-1 flex-shrink-0"></i> Como seguir um plano de 30 dias para transformar sua vida</li>
+                            <li class="flex items-start"><i data-lucide="arrow-right-circle" class="accent w-5 h-5 mr-3 mt-1 flex-shrink-0"></i> Exercícios práticos e exemplos reais</li>
+                            <li class="flex items-start"><i data-lucide="arrow-right-circle" class="accent w-5 h-5 mr-3 mt-1 flex-shrink-0"></i> É a economia que cabe na rotina de verdade.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 6. Bônus Especial Incluso -->
+        <section id="bonus" class="bg-gray-950 py-20 px-4 border-t border-gray-800">
+            <div class="max-w-6xl mx-auto text-center">
+                <h2 class="text-4xl font-extrabold mb-4">🎁 Bônus Especial Incluso</h2>
+                <p class="text-xl text-gray-300 mb-10">Para garantir que você comece com o pé direito, você recebe gratuitamente:</p>
+                
+                <div class="bg-gray-800 p-8 md:p-12 rounded-2xl shadow-2xl border-2 border-accent max-w-3xl mx-auto">
+                    <i data-lucide="bar-chart-3" class="accent w-12 h-12 mx-auto mb-4"></i>
+                    <h3 class="text-3xl font-bold mb-4">📊 Planilha Inteligente de Controle Financeiro</h3>
+                    
+                    <div class="flex flex-wrap justify-center gap-6 text-left text-lg text-gray-300">
+                        <ul class="space-y-3 w-full md:w-auto">
+                            <li class="flex items-start"><i data-lucide="check" class="accent w-5 h-5 mr-2 mt-1 flex-shrink-0"></i> Registrar gastos e entradas</li>
+                            <li class="flex items-start"><i data-lucide="check" class="accent w-5 h-5 mr-2 mt-1 flex-shrink-0"></i> Ver automaticamente quanto pode economizar</li>
+                        </ul>
+                        <ul class="space-y-3 w-full md:w-auto">
+                            <li class="flex items-start"><i data-lucide="check" class="accent w-5 h-5 mr-2 mt-1 flex-shrink-0"></i> Criar metas financeiras</li>
+                            <li class="flex items-start"><i data-lucide="check" class="accent w-5 h-5 mr-2 mt-1 flex-shrink-0"></i> Acompanhar seu progresso no gráfico</li>
+                        </ul>
+                    </div>
+                    
+                    <p class="text-md italic text-gray-400 mt-6">Simples, automática e perfeita pra quem nunca usou planilha.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 7. Por Que Esse Guia Funciona? / Depoimento -->
+        <section class="bg-gray-900 py-20 px-4">
+            <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-12 items-center">
+                
+                <!-- Coluna de Por Que Funciona -->
+                <div class="md:col-span-2">
+                    <h2 class="text-4xl font-extrabold mb-6 accent">🔥 Por Que Esse Guia Funciona?</h2>
+                    <p class="text-xl text-gray-300 mb-6">Porque ele foi criado pra vida real. Nada de cálculos complexos ou teorias difíceis.</p>
+                    
+                    <ul class="space-y-4 text-left text-lg font-medium text-white">
+                        <li class="flex items-start">
+                            <i data-lucide="zap" class="accent w-5 h-5 mr-3 mt-1 flex-shrink-0"></i>
+                            <span>Você aprende como economizar sem virar o chato da turma.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="zap" class="accent w-5 h-5 mr-3 mt-1 flex-shrink-0"></i>
+                            <span>Como colocar o dinheiro no lugar aos poucos.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="zap" class="accent w-5 h-5 mr-3 mt-1 flex-shrink-0"></i>
+                            <span>E como fazer sobrar grana sem cortar o lazer.</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Coluna de Depoimento -->
+                <div class="bg-gray-800 p-8 rounded-xl border-t-8 border-accent shadow-xl h-full flex flex-col justify-between">
+                    <i data-lucide="star" class="accent w-8 h-8 mb-4"></i>
+                    <p class="text-xl italic mb-6">“Finalmente entendi minha vida financeira. Consegui guardar dinheiro sem deixar de sair com meus amigos.”</p>
+                    <p class="font-bold text-lg">— Leitor do Guia</p>
+                    <small class="text-gray-500 mt-1">(Você pode substituir quando tiver depoimentos reais)</small>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 8. CTA Final (Preço e Botão) -->
+        <section id="cta-final" class="bg-black py-20 px-4 border-t-4 border-accent/50">
+            <div class="max-w-4xl mx-auto text-center">
+                
+                <h2 class="text-3xl sm:text-4xl font-extrabold mb-6 text-white">
+                    <span class="accent">Não Pague o Preço da Dívida.</span> Invista em Você Agora!
+                </h2>
+
+                <p class="text-xl text-gray-300 mb-4">Você vai pagar menos do que gastaria em um único churrasco.</p>
+                
+                <div class="mb-8">
+                    <span class="text-4xl line-through text-gray-500 mr-4">De R$ 197,00</span>
+                    <span class="text-5xl font-extrabold accent block md:inline">Por Apenas</span>
+                    <span class="text-7xl font-extrabold accent block md:inline ml-2">R$ 47,00</span>
+                </div>
+
+                <!-- Botão CTA Final -->
+                <a href="#" class="inline-block py-5 px-10 bg-accent text-white rounded-xl font-extrabold text-2xl shadow-2xl hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-red-500/50 uppercase">
+                    👉 Quero Aprender a Economizar Sem Sofrer
+                </a>
+                
+                <!-- Garantia -->
+                <div class="mt-8">
+                    <p class="text-gray-400 text-sm">
+                        <i data-lucide="shield" class="w-4 h-4 inline mr-1 text-gray-500"></i>
+                        <span class="cursor-pointer underline hover:text-accent font-medium" onclick="openModal()">
+                            Garantia: 7 dias para pedir reembolso. Simples assim.
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Footer (Fechamento) -->
+    <footer class="bg-gray-950 py-10 px-4 text-center border-t border-gray-800">
+        <div class="max-w-4xl mx-auto">
+            <p class="text-lg text-gray-400 mb-6">Você merece viver com mais leveza, menos dívidas e mais liberdade.</p>
+            <p class="text-white font-bold text-xl mb-8">E isso começa com um primeiro passo simples:</p>
+            
+            <a href="#cta-final" class="inline-block py-4 px-8 bg-accent text-white rounded-xl font-bold text-lg shadow-xl hover:bg-red-700 transition duration-300 transform hover:scale-105">
+                👉 Clique no botão abaixo e comece hoje.
+            </a>
+            
+            <p class="text-xs text-gray-600 mt-12">Copyright © 2024 Econo Fácil. Todos os direitos reservados. | Termos de Uso | Políticas de Privacidade</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript para a lógica de UI -->
+    <script>
+        // Inicializa os ícones do Lucide
+        lucide.createIcons();
+
+        // Variável para controlar o estado da modal
+        const modal = document.getElementById('guarantee-modal');
+
+        /**
+         * Abre a modal de garantia.
+         */
+        function openModal() {
+            modal.style.display = 'flex';
+            // Adiciona classe para prevenir scroll no body
+            document.body.classList.add('overflow-hidden'); 
+        }
+
+        /**
+         * Fecha a modal de garantia.
+         */
+        function closeModal() {
+            modal.style.display = 'none';
+            // Remove classe para permitir scroll
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // Simula a funcionalidade do vídeo (mudar estado do play/som)
+        const videoPlaceholder = document.querySelector('.video-placeholder');
+        if (videoPlaceholder) {
+            videoPlaceholder.addEventListener('click', () => {
+                // Aqui você faria a lógica de play/pause de um vídeo de verdade.
+                // Como é um placeholder, apenas simulamos um console log.
+                console.log('Vídeo simulado clicado! (Iniciaria a reprodução aqui)');
+            });
+        }
+        function calcularEconomia() {
+    const salario = Number(document.getElementById("salarioInput").value);
+
+    if (!salario || salario <= 0) {
+        alert("Por favor, digite um salário válido.");
+        return;
+    }
+
+    const economiaMensal = salario * 0.10;
+    const economiaAnual = economiaMensal * 12;
+
+    const resultadoBox = document.getElementById("resultadoEconomia");
+    resultadoBox.innerHTML = 
+        `Você pode juntar <span class="accent">R$ ${economiaAnual.toFixed(2)}</span> em 12 meses!`;
+    resultadoBox.classList.remove("hidden");
+}
+
+    </script>
+</body>
+</html>
